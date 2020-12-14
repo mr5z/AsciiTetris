@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <conio.h>
+#include <iostream>
 
 
 #ifndef _SHITTY_CODES_
@@ -15,7 +16,7 @@
 #define RIGHT		0x4D
 
 #define SBAR		32
-#define TAB			1
+#define TAB			9
 #define HOLD		'c'
 #define ENTER		13
 #define ESC			27
@@ -25,56 +26,55 @@
 
 #define KEY		_getch()
 
-
-HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-CONSOLE_CURSOR_INFO info;
-COORD coord;
+static HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 namespace txtBase
 {
-
-	void SetColor(int color)
+	static void SetColor(int color)
 	{
 		SetConsoleTextAttribute(handle, color);
 	}
 
-	void MoveTo(int x, int y)
+	static void MoveTo(int x, int y)
 	{
-		coord.X = x;
-		coord.Y = y;
+		COORD coord = { x, y };
+		SetConsoleCursorPosition(handle, coord);
 	}
 
-	void PrintText(int x, int y, int color, int num)
+	static void PrintText(int x, int y, int color, int num)
 	{
 		MoveTo(x, y);
 		SetColor(color);
-		printf("%d", num);
+		printf("%c", num);
 	}
 
-	void PrintText(int x, int y, int color, const char* str, int num)
+	static void PrintText(int x, int y, int color, const char* str)
+	{
+		MoveTo(x, y);
+		SetColor(color);
+		printf("%s", str);
+	}
+
+	static void PrintText(int x, int y, int color, const char* str, int num)
 	{
 		MoveTo(x, y);
 		SetColor(color);
 		printf("%s%d", str, num);
 	}
 
-	void PrintText(int x, int y, int color, const char* str)
+	static void RemoveBlinkingCursor()
 	{
-		MoveTo(x, y);
-		SetColor(color);
-		printf(str);
+		CONSOLE_CURSOR_INFO cursorInfo;
+		GetConsoleCursorInfo(handle, &cursorInfo);
+		cursorInfo.bVisible = FALSE; // set the cursor visibility
+		cursorInfo.dwSize = 1;
+		SetConsoleCursorInfo(handle, &cursorInfo);
 	}
 
-	void RemoveBlinkingCursor()
-	{
-		info.bVisible = FALSE;
-		info.dwSize = 1;
-		SetConsoleCursorInfo(handle, &info);
-	}
-
-	void SetWindowSize(SHORT width, SHORT height)
+	static void SetWindowSize(SHORT width, SHORT height)
 	{
 		_SMALL_RECT rect;
+		COORD coord = { 0, 0 };
 		rect.Top = 0;
 		rect.Left = 0;
 		rect.Bottom = height - 1;
@@ -83,23 +83,19 @@ namespace txtBase
 		SetConsoleScreenBufferSize(handle, coord);
 
 		SetConsoleWindowInfo(handle, TRUE, &rect);
-
 	}
 
-	void InitActiveScreenBuffer()
+	static void InitActiveScreenBuffer()
 	{
 		CONSOLE_SCREEN_BUFFER_INFO SBInfo;
 		COORD NewSBSize;
-
 
 		GetConsoleScreenBufferInfo(handle, &SBInfo);
 		NewSBSize.X = SBInfo.dwSize.X - 2;
 		NewSBSize.Y = SBInfo.dwSize.Y;
 
 		SetConsoleScreenBufferSize(handle, NewSBSize);
-
 	}
-
 
 };
 

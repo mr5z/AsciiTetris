@@ -32,3 +32,8 @@ void CDraw::cell(int bX, int bY, eVis bVis, int xtendX, int xtendY, int cColor)
 	txtBase::MoveTo(bX + xtendX,bY + xtendY);		printf("%c%c",piece[bVis][0],piece[bVis][1]);
 	txtBase::MoveTo(bX + xtendX,bY + xtendY + 1);	printf("%c%c",piece[bVis][2],piece[bVis][3]);
 }
+
+void CDraw::PivotColor(eCells cell)
+{
+
+}

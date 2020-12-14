@@ -13,6 +13,8 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+void DrawBox(int x, int y, int color, int width, int height);
+
 void InitWindowLayout(CGame Game)
 {
 	extern bool EXIT;
@@ -25,7 +27,7 @@ void InitWindowLayout(CGame Game)
 	// windows console title
 	SetConsoleTitle(L"Tetris");
 	// Sets the size
-	SetWindowSize(width,height);
+	SetWindowSize(width, height);
 	// initialize the new windows console size
 	//InitWindowSize();
 	// adapt the screen buffer to new windows console screen size
@@ -44,27 +46,13 @@ void InitWindowLayout(CGame Game)
 	Game.Menu.MainMenu();
 	//checks if user quits the game, if so, terminates the app immediately
 	if(EXIT) exit(EXIT_SUCCESS);
+
 	// draws the boundaries of the Board
-	//DrawBox	
-	//	(
-	//52,56,
-	//BOX_COLOR1,
-	//BOARD_Y - 1,BOARD_X + 1
-	//	);
+	DrawBox(31, 9, 22, 48, 11);
 	// draws a box on the right of the Board
-	//DrawBox
-	//	(
-	//71,30,
-	//BOX_COLOR2,
-	//BOARD_Y + 9,BOARD_X + 27
-	//	);
-	// draws a box on the left of the Board
-	//DrawBox
-	//	(
-	//26,30,
-	//BOX_COLOR2,
-	//BOARD_Y + 9,BOARD_X - 18
-	//	);
+	DrawBox(56, 19, 17, 12, 7);
+	//// draws a box on the left of the Board
+	DrawBox(11, 19, 17, 12, 7);
 
 }
 
@@ -81,6 +69,7 @@ int main()
 	CGame MyGame;
 	// Initializes my preferred console layout
 	InitWindowLayout(MyGame);
+
 	//Initializes variables
 	MyGame.InitGame();
 
@@ -257,4 +246,38 @@ int main()
 
 	return 0;
 
+}
+
+void DrawBox(int x, int y, int width, int height, int color)
+{
+	int top_left = 201;
+	int top_right = 187;
+	int bottom_right = 188;
+	int bottom_left = 200;
+	int h = 205;
+	int v = 186;
+	for (int row = 0; row < height; ++row) {
+		for (int col = 0; col < width; ++col) {
+			txtBase::MoveTo(x + col, y + row);
+			txtBase::SetColor(color);
+			if (col == 0 && row == 0) {
+				printf("%c", top_left);
+			}
+			else if (col == width - 1 && row == height - 1) {
+				printf("%c", bottom_right);
+			}
+			else if (row == 0 && col == width - 1) {
+				printf("%c", top_right);
+			}
+			else if (col == 0 && row == height - 1) {
+				printf("%c", bottom_left);
+			}
+			else if (col == 0 || col == width - 1) {
+				printf("%c", v);
+			}
+			else if (row == 0 || row == height - 1) {
+				printf("%c", h);
+			}
+		}
+	}
 }

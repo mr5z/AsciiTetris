@@ -26,6 +26,8 @@ void InitWindowLayout(CGame Game)
 	COORD coord = {width,height};
 	// windows console title
 	SetConsoleTitle(L"Tetris");
+
+	SetFontSize(10);
 	// Sets the size
 	SetWindowSize(width, height);
 	// initialize the new windows console size
@@ -84,7 +86,9 @@ int main()
 			//Redraws the invisible Block
 			MyGame.Draw.TetrisBlock (eCells(MyGame.bType),MyGame.bRotation,MyGame.mX,MyGame.mY,OFF);
 
-			switch(KEY)
+			int key = _getch();
+
+			switch(key)
 			{
 
 			case UP:
@@ -199,6 +203,31 @@ int main()
 
 			case ENTER:
 				{MyGame.Board.ClearBoard();break;}
+
+			case F1:
+				MyGame.Board.customMap = 0;
+				MyGame.Board.ClearBoard();
+				break;
+
+			case F2:
+				MyGame.Board.customMap = 1;
+				MyGame.Board.ClearBoard();
+				break;
+
+			case F3:
+				MyGame.Board.customMap = 2;
+				MyGame.Board.ClearBoard();
+				break;
+
+			case F4:
+				MyGame.Board.customMap = 3;
+				MyGame.Board.ClearBoard();
+				break;
+
+			case F5:
+				MyGame.Board.customMap = 4;
+				MyGame.Board.ClearBoard();
+				break;
 
 			}
 
